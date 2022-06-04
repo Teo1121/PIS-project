@@ -81,8 +81,6 @@ export default {
           this.user = response.data;
         })
         .catch((error) => {
-          localStorage.clear();
-          //this.$router.push({ name: "list" });
           this.error = error.message;
         });
     }, 200);
@@ -141,6 +139,7 @@ export default {
           this.$router.push({ name: "users" });
         })
         .catch((error) => {
+          localStorage.removeItem("publicKey");
           this.error = error.message;
         });
     },

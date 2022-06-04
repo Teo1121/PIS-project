@@ -100,6 +100,7 @@ export default {
           }
         })
         .catch((error) => {
+          localStorage.removeItem("publicKey");
           this.error = error.message;
         });
     },

@@ -70,7 +70,6 @@ export default {
   },
   mounted() {
     this.professor = JSON.parse(localStorage.getItem("selectedProf")).name;
-    console.log(this.professor);
     if (!this.professor) {
       this.$router.push({ name: "list" });
     }
@@ -88,7 +87,7 @@ export default {
           this.reviews = response.data;
         })
         .catch((error) => {
-          localStorage.clear();
+          localStorage.removeItem("selectedProf");
           this.$router.push({ name: "list" });
           this.error = error.message;
         });

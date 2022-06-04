@@ -97,6 +97,7 @@ export default {
           this.error = error.message;
         });
     }, 200);
+
     this.publicKey = localStorage.getItem("publicKey");
     if (this.publicKey) {
       return;
@@ -129,6 +130,7 @@ export default {
           window.location.reload();
         })
         .catch((error) => {
+          localStorage.removeItem("publicKey");
           this.error = error.message;
         });
     },

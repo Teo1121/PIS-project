@@ -38,20 +38,43 @@
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>
   </form>
+  <div
+    style="display: flex; place-content: center; margin-top: 2rem"
+    v-if="
+      store.currentUser && store.currentUser.roles.includes('ROLE_MODERATOR')
+    "
+  >
+    <label for="doughnut"
+      >Number of reviews
+      <DoughnutChart
+        id="doughnut"
+        style="margin-right: 2rem"
+        :vueChartData="chartData"
+    /></label>
+    <label for="bar"
+      >Average review scores
+      <BarChart id="bar" style="margin-left: 2rem" :vueChartData="chartData"
+    /></label>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import store from "@/store";
 
+import DoughnutChart from "@/components/DoughnutChart.vue";
+import BarChart from "@/components/BarChart.vue";
+
 export default {
   name: "ReviewView",
+  components: { DoughnutChart, BarChart },
   data() {
     return {
       professorList: [],
       store,
       error: "",
       newProfessor: { name: "", details: "" },
+      chartData: [],
     };
   },
   mounted() {
@@ -63,7 +86,24 @@ export default {
         localStorage.setItem("professorList", JSON.stringify(response.data));
       });
     }
+    setTimeout(() => {
+      if (
+        store.currentUser &&
+        store.currentUser.roles.includes("ROLE_MODERATOR")
+      ) {
+        axios
+          .get("http://localhost:8080/api/review/stats", {
+            headers: {
+              Authorization: "Bearer " + this.store.currentUser.accessToken,
+            },
+          })
+          .then((response) => {
+            this.chartData = response.data;
+          });
+      }
+    }, 200);
   },
+
   methods: {
     click(prof) {
       if (this.store.currentUser) {
@@ -86,7 +126,7 @@ export default {
           },
         })
         .then((response) => {
-          localStorage.clear();
+          localStorage.removeItem("professorList");
           this.$router.push({ name: "home" });
         })
         .catch((error) => {

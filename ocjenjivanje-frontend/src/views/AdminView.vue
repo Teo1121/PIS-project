@@ -95,7 +95,7 @@ export default {
           this.reviews = response.data;
         })
         .catch((error) => {
-          localStorage.clear();
+          localStorage.removeItem("selectedProf");
           this.$router.push({ name: "list" });
           this.error = error.message;
         });
@@ -140,7 +140,7 @@ export default {
           }
         )
         .then((response) => {
-          localStorage.clear();
+          localStorage.removeItem("professorList");
           this.$router.push({ name: "list" });
         })
         .catch((error) => {
